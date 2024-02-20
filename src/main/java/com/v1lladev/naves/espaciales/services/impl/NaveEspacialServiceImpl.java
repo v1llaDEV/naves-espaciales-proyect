@@ -2,6 +2,7 @@ package com.v1lladev.naves.espaciales.services.impl;
 
 import com.v1lladev.naves.espaciales.constants.ExceptionsMessageErrors;
 import com.v1lladev.naves.espaciales.dto.exceptions.GeneralResourceNotFoundException;
+import com.v1lladev.naves.espaciales.dto.exceptions.PageParametersInvalidException;
 import com.v1lladev.naves.espaciales.dto.requests.NaveEspacialRequest;
 import com.v1lladev.naves.espaciales.dto.responses.NaveEspacialResponse;
 import com.v1lladev.naves.espaciales.mappers.NaveEspacialMapper;
@@ -26,7 +27,13 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
 
     @Cacheable("naves-espaciales")
     @Override
-    public List<NaveEspacialResponse> getAllNavesEspaciales(int page, int size) {
+    public List<NaveEspacialResponse> getAllNavesEspacialesPaginado(int page, int size) throws PageParametersInvalidException {
+        if (page < 0) {
+            throw new PageParametersInvalidException("El parámetro page no puede ser menor que 0");
+        } else if (size < 1) {
+            throw new PageParametersInvalidException("El parámetro size no puede ser menor que 1");
+        }
+
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<NaveEspacialEntity> navesEspacialesResultEntity = naveEspacialRepository.findAll(pageRequest);
         return naveEspacialMapper.listToResponsePage(navesEspacialesResultEntity);

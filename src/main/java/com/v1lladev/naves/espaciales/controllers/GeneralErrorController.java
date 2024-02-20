@@ -4,6 +4,7 @@ import com.v1lladev.naves.espaciales.constants.ExceptionsMessageErrors;
 import com.v1lladev.naves.espaciales.constants.StringConstants;
 import com.v1lladev.naves.espaciales.dto.exceptions.CustomInvalidParameterException;
 import com.v1lladev.naves.espaciales.dto.exceptions.GeneralResourceNotFoundException;
+import com.v1lladev.naves.espaciales.dto.exceptions.PageParametersInvalidException;
 import com.v1lladev.naves.espaciales.dto.responses.ExceptionResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class GeneralErrorController {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionResponseDto> handleHttpMessageNotReadableException(final HttpMessageNotReadableException exception, final HttpServletRequest request) {
-        if(exception.getCause().getCause().toString().contains("DateTimeParseException")){
+        if(exception.getCause().toString().contains("DateTimeParseException")){
             return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), ExceptionsMessageErrors.VALIDATION_FORMATO_FECHA_INVALIDO);
         }
         return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), exception.getMessage());
@@ -44,6 +45,16 @@ public class GeneralErrorController {
             outputErrors.append(error.getDefaultMessage()).append(StringConstants.DOT_SPACE_SEPARATOR);
         });
         return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), outputErrors.toString());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionResponseDto> handleBindException(final IllegalArgumentException exception, final HttpServletRequest request) {
+        return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+    }
+
+    @ExceptionHandler(PageParametersInvalidException.class)
+    public ResponseEntity<ExceptionResponseDto> handlePageParametersInvalidException(final PageParametersInvalidException exception, final HttpServletRequest request) {
+        return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), exception.getMessage());
     }
 
     @ExceptionHandler(BindException.class)
@@ -63,7 +74,7 @@ public class GeneralErrorController {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ExceptionResponseDto> handleMissingServletRequestParameterException(final MissingServletRequestParameterException exception, final HttpServletRequest request) {
-        return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), StringConstants.EMPTY_STRING);
+        return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), String.format(ExceptionsMessageErrors.VALIDATION_PARAMETRO_OBLIGATORIO, exception.getParameterName()));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

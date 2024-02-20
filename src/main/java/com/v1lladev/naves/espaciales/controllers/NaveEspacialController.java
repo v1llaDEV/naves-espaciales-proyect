@@ -1,5 +1,6 @@
 package com.v1lladev.naves.espaciales.controllers;
 
+import com.v1lladev.naves.espaciales.dto.exceptions.PageParametersInvalidException;
 import com.v1lladev.naves.espaciales.dto.requests.NaveEspacialRequest;
 import com.v1lladev.naves.espaciales.dto.responses.ExceptionResponseDto;
 import com.v1lladev.naves.espaciales.dto.responses.NaveEspacialResponse;
@@ -32,9 +33,9 @@ public class NaveEspacialController {
     @Operation(summary = "Obtener todas las naves espaciales usando paginación", description = "Obtener todas las naves espaciales usando paginación")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = NaveEspacialResponse.class))))
     @ApiResponse(responseCode = "204", description = "No existen naves espaciales", content = @Content(schema = @Schema(implementation = Void.class)))
-    public ResponseEntity<List<NaveEspacialResponse>> getAllNavesEspaciales(@RequestParam(defaultValue = "0") int page,
-                                                                            @RequestParam(defaultValue = "5") int size) {
-        List<NaveEspacialResponse> resultNavesEspaciales = naveEspacialService.getAllNavesEspaciales(page, size);
+    public ResponseEntity<List<NaveEspacialResponse>> getAllNavesEspacialesPaginado(@RequestParam(defaultValue = "0") int page,
+                                                                            @RequestParam(defaultValue = "5") int size) throws PageParametersInvalidException {
+        List<NaveEspacialResponse> resultNavesEspaciales = naveEspacialService.getAllNavesEspacialesPaginado(page, size);
 
         if(resultNavesEspaciales.isEmpty()){
             return ResponseEntity.noContent().build();
@@ -68,7 +69,7 @@ public class NaveEspacialController {
         return naveEspacialService.getNaveEspacialById(id);
     }
 
-    @Operation(summary = "Buscar nave espacial a través del parámetro id descrito en el path", description = "Buscar nave espacial a través del parámetro id descrito en el path")
+    @Operation(summary = "Crear nueva nave espacial", description = "Buscar nave espacial a través del parámetro id descrito en el path")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = NaveEspacialResponse.class)))
     @ApiResponse(responseCode = "400", description = "Validación de algún parámetro de la petición", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponseDto.class)))
     @ResponseStatus(HttpStatus.CREATED)
@@ -77,7 +78,7 @@ public class NaveEspacialController {
         return naveEspacialService.createNaveEspacial(naveEspacial);
     }
 
-    @Operation(summary = "Buscar nave espacial a través del parámetro id descrito en el path", description = "Buscar nave espacial a través del parámetro id descrito en el path")
+    @Operation(summary = "Actualizar nave espacial a través del parámetro id descrito en el path", description = "Buscar nave espacial a través del parámetro id descrito en el path")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = NaveEspacialResponse.class)))
     @ApiResponse(responseCode = "400", description = "Error de validación de algún parámetro de la petición", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponseDto.class)))
     @ApiResponse(responseCode = "404", description = "La nave espacial no ha sido encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponseDto.class)))
@@ -86,7 +87,7 @@ public class NaveEspacialController {
         return naveEspacialService.updateNaveEspacial(id, naveEspacial);
     }
 
-    @Operation(summary = "Buscar nave espacial a través del parámetro id descrito en el path", description = "Buscar nave espacial a través del parámetro id descrito en el path")
+    @Operation(summary = "Eliminar nave espacial a través del parámetro id descrito en el path", description = "Buscar nave espacial a través del parámetro id descrito en el path")
     @ApiResponse(responseCode = "204", description = "OK - No content", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "400", description = "Error de validación de algún parámetro de la petición", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponseDto.class)))
     @ApiResponse(responseCode = "404", description = "La nave espacial no ha sido encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponseDto.class)))
