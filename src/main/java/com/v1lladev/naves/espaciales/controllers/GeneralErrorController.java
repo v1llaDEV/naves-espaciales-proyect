@@ -1,15 +1,20 @@
 package com.v1lladev.naves.espaciales.controllers;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.v1lladev.naves.espaciales.constants.ExceptionsMessageErrors;
 import com.v1lladev.naves.espaciales.constants.StringConstants;
 import com.v1lladev.naves.espaciales.dto.exceptions.CustomInvalidParameterException;
+import com.v1lladev.naves.espaciales.dto.exceptions.DateInvalidParameterException;
 import com.v1lladev.naves.espaciales.dto.exceptions.GeneralResourceNotFoundException;
 import com.v1lladev.naves.espaciales.dto.responses.ExceptionResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -24,6 +30,29 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @Slf4j
 @ControllerAdvice
 public class GeneralErrorController {
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionResponseDto> handleHttpMessageNotReadableException(final HttpMessageNotReadableException exception, final HttpServletRequest request) {
+        if(exception.getCause().getCause().toString().contains("DateTimeParseException")){
+            return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), ExceptionsMessageErrors.VALIDATION_FORMATO_FECHA_INVALIDO);
+        }
+        return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponseDto> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception, final HttpServletRequest request) {
+
+        StringBuilder outputErrors = new StringBuilder();
+        exception.getBindingResult().getAllErrors().forEach((error) -> {
+            outputErrors.append(error.getDefaultMessage()).append(StringConstants.DOT_SPACE_SEPARATOR);
+        });
+        return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), outputErrors.toString());
+    }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ExceptionResponseDto> handleBindException(final BindException exception, final HttpServletRequest request) {
+        return handleExceptionResponseDto(exception, request, HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+    }
 
     @ExceptionHandler(GeneralResourceNotFoundException.class)
     public ResponseEntity<ExceptionResponseDto> handleCustomNotFoundParameterException(final GeneralResourceNotFoundException exception, final HttpServletRequest request) {
@@ -61,8 +90,9 @@ public class GeneralErrorController {
     }
 
     private ResponseEntity<ExceptionResponseDto> handleExceptionResponseDto(Exception exception, HttpServletRequest request, Integer httpStatus, String customMessage) {
-        log.error(String.format("Exception -> CODE: %s - MESSAGE: %s - TIMESTAMP: %s - PATH: %s",
+        log.error(String.format(ExceptionsMessageErrors.GENERAL_VALIDATION_MESSAGE,
                 httpStatus, exception.getMessage(), LocalDateTime.now(), request.getRequestURI()));
+        exception.printStackTrace();
         return ResponseEntity
                 .status(httpStatus)
                 .body(ExceptionResponseDto.builder()
