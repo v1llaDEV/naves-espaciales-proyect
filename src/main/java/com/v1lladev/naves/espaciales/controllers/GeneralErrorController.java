@@ -100,7 +100,6 @@ public class GeneralErrorController {
     private ResponseEntity<ExceptionResponseDto> handleExceptionResponseDto(Exception exception, HttpServletRequest request, Integer httpStatus, String customMessage) {
         log.error(String.format(ExceptionsMessageErrors.GENERAL_VALIDATION_MESSAGE,
                 httpStatus, exception.getMessage(), LocalDateTime.now(), request.getRequestURI()));
-        exception.printStackTrace();
         return ResponseEntity
                 .status(httpStatus)
                 .body(ExceptionResponseDto.builder()
