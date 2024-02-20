@@ -1,6 +1,9 @@
 package com.v1lladev.naves.espaciales.dto.requests;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,8 +26,8 @@ public class NaveEspacialRequest {
     @Size(min = 3, max = 50, message = "Campo seriePelicula tiene que tener entre 3 y 50 caracteres")
     private String seriePelicula;
 
-    @Min(value = 0, message = "El numTripulantes de TRIPULANTES ES 0")
-    @Max(value = 1000, message = "El numTripulantes de TRIPULANTES ES 1000")
+    @Min(value = 0, message = "El mínimo valor númerico para el campo numTripulantes ES 0")
+    @Max(value = 1000, message = "El máximo valor númerico para el campo numTripulantes ES 1000")
     private Integer numTripulantes;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

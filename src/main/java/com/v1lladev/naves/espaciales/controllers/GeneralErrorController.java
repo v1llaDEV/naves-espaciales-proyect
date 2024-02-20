@@ -1,10 +1,8 @@
 package com.v1lladev.naves.espaciales.controllers;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.v1lladev.naves.espaciales.constants.ExceptionsMessageErrors;
 import com.v1lladev.naves.espaciales.constants.StringConstants;
 import com.v1lladev.naves.espaciales.dto.exceptions.CustomInvalidParameterException;
-import com.v1lladev.naves.espaciales.dto.exceptions.DateInvalidParameterException;
 import com.v1lladev.naves.espaciales.dto.exceptions.GeneralResourceNotFoundException;
 import com.v1lladev.naves.espaciales.dto.responses.ExceptionResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +20,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;

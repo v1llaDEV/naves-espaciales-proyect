@@ -11,6 +11,8 @@ import com.v1lladev.naves.espaciales.services.NaveEspacialService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +26,10 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
 
     @Cacheable("naves-espaciales")
     @Override
-    public List<NaveEspacialResponse> getAllNavesEspaciales() {
-        List<NaveEspacialEntity> navesEspacialesResultEntity = naveEspacialRepository.findAll();
-        return naveEspacialMapper.listToResponse(navesEspacialesResultEntity);
+    public List<NaveEspacialResponse> getAllNavesEspaciales(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<NaveEspacialEntity> navesEspacialesResultEntity = naveEspacialRepository.findAll(pageRequest);
+        return naveEspacialMapper.listToResponsePage(navesEspacialesResultEntity);
     }
 
     @Cacheable("naves-espaciales")
@@ -54,6 +57,7 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
     @CacheEvict(cacheNames ="naves-espaciales", allEntries = true)
     @Override
     public NaveEspacialResponse updateNaveEspacial(Long id, NaveEspacialRequest naveEspacial) {
+        getNaveEspacialById(id);
         NaveEspacialEntity naveEspacialEntity = naveEspacialMapper.requestToEntity(naveEspacial);
         naveEspacialEntity.setId(id);
         NaveEspacialEntity naveEspacialResult = naveEspacialRepository.save(naveEspacialEntity);

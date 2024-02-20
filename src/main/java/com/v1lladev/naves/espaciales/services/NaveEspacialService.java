@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface NaveEspacialService {
 
-    List<NaveEspacialResponse> getAllNavesEspaciales();
+    List<NaveEspacialResponse> getAllNavesEspaciales(int page, int size);
     List<NaveEspacialResponse> getAllNavesEspacialesByNameContaining(String nombre);
     NaveEspacialResponse getNaveEspacialById(Long id);
     NaveEspacialResponse createNaveEspacial(NaveEspacialRequest naveEspacial);
