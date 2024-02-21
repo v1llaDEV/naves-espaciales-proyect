@@ -13,4 +13,4 @@ spring:
     console:
       enabled: true
 
-habilitar.topic.kafka: true
+habilitar.topic.kafka: false

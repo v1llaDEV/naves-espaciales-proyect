@@ -3,8 +3,6 @@ package com.v1lladev.naves.espaciales.kafka.producers;
 import com.github.javafaker.Faker;
 import com.v1lladev.naves.espaciales.configurations.ScheduledCondition;
 import com.v1lladev.naves.espaciales.dto.requests.NaveEspacialRequest;
-import com.v1lladev.naves.espaciales.dto.responses.NaveEspacialResponse;
-import com.v1lladev.naves.espaciales.models.NaveEspacialEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
@@ -13,7 +11,6 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 

@@ -2,7 +2,6 @@ package com.v1lladev.naves.espaciales.kafka.serializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.v1lladev.naves.espaciales.dto.requests.NaveEspacialRequest;
-import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.util.Map;
