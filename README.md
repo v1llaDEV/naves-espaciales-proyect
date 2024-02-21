@@ -1,6 +1,8 @@
 # naves-espaciales-proyect
 
-## Dockerizar y desplegar la aplicación habría que realizar los siguientes pasos:
+## Dockerizar y desplegar la aplicación
+
+Hay que realizar los siguientes pasos:
 
 1. Situarse en la raíz del proyecto
 2. Tener instalado maven y una versión correctamente configurada de java 17
