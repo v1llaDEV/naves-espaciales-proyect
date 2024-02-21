@@ -1,16 +1,34 @@
 # naves-espaciales-proyect
 
-## Para dockerizar y desplegar la aplicación habría que realizar los siguientes pasos:
+## Dockerizar y desplegar la aplicación habría que realizar los siguientes pasos:
 
 1. Situarse en la raíz del proyecto
 2. Tener instalado maven y una versión correctamente configurada de java 17
 3. Ejecutar el comando 'mvn clean install' para generar el artefacto
-4. Iniciar docker en la computadora
+4. Iniciar docker en la máquina
 5. Ejecutar el comando 'docker build -t naves-espaciales-proyect .' para buildear la imagen de la aplicación
 6. Ejecutar el comando 'docker run -p 8080:8080 naves-espaciales-proyect' para crear un contenedor a partir de la imágen
 7. Después de algunos segundos ya se habría levantado la aplicación y se podría consultar por ejemplo a través de:
    1. A través de postman: http://localhost:8080/swagger-ui/index.html
    2. A través de un endpoint de actuator: http://localhost:8080/actuator/health
+
+## Implementación de kafka
+
+Existe:
+
+- Una configuración para crear el topic: nave-espacial-topic
+- Un productor que cada 3 segundos crea una nueva nave espacial y la envía a la cola
+- Un consumidor con 3 hilos que se ejecutan de forma concurrente leyendo los mensajes de la cola
+
+```
+IMPORTANTE: La configuración de kafka está implementada a través de la condición habilitar.topic.kafka
+del archivo application.yaml de la aplicación. Por defecto se encuentra a false, si se desea
+probar la parte de kafka se debe establecer a true.
+```
+
+Requisitos:
+
+- Tener levantado un cluster de kafka expuesto en el puerto 9092
 
 ## Enunciado
 

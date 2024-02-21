@@ -10,6 +10,7 @@ import com.v1lladev.naves.espaciales.models.NaveEspacialEntity;
 import com.v1lladev.naves.espaciales.repositories.NaveEspacialRepository;
 import com.v1lladev.naves.espaciales.services.NaveEspacialService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class NaveEspacialServiceImpl implements NaveEspacialService {
@@ -36,6 +38,7 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
 
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<NaveEspacialEntity> navesEspacialesResultEntity = naveEspacialRepository.findAll(pageRequest);
+        log.info("Consultando navesEspaciales paginado {}", navesEspacialesResultEntity);
         return naveEspacialMapper.listToResponsePage(navesEspacialesResultEntity);
     }
 
@@ -43,6 +46,7 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
     @Override
     public List<NaveEspacialResponse> getAllNavesEspacialesByNameContaining(String nombre) {
         List<NaveEspacialEntity> navesEspacialesResultEntity = naveEspacialRepository.findByNombreContainsIgnoreCase(nombre);
+        log.info("Consultando navesEspaciales por nombre {}", navesEspacialesResultEntity);
         return naveEspacialMapper.listToResponse(navesEspacialesResultEntity);
     }
 
@@ -50,6 +54,7 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
     public NaveEspacialResponse getNaveEspacialById(Long id) {
         NaveEspacialEntity naveEspacialEntity = naveEspacialRepository.findById(id).orElseThrow(() -> new GeneralResourceNotFoundException
                 (String.format(ExceptionsMessageErrors.VALIDATION_NAVE_ID_NO_ENCONTRADA_ERROR, id)));
+        log.info("Consultando navesEspaciales por id {}", naveEspacialEntity);
         return naveEspacialMapper.toResponse(naveEspacialEntity);
     }
 
@@ -58,6 +63,7 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
     public NaveEspacialResponse createNaveEspacial(NaveEspacialRequest naveEspacial) {
         NaveEspacialEntity naveEspacialEntity = naveEspacialMapper.requestToEntity(naveEspacial);
         NaveEspacialEntity naveEspacialResult = naveEspacialRepository.save(naveEspacialEntity);
+        log.info("Se ha guardado la nave espacial {}", naveEspacialResult);
         return naveEspacialMapper.toResponse(naveEspacialResult);
     }
 
@@ -68,6 +74,7 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
         NaveEspacialEntity naveEspacialEntity = naveEspacialMapper.requestToEntity(naveEspacial);
         naveEspacialEntity.setId(id);
         NaveEspacialEntity naveEspacialResult = naveEspacialRepository.save(naveEspacialEntity);
+        log.info("Modificando nave espacial con id " + id + ": %s", naveEspacialResult);
         return naveEspacialMapper.toResponse(naveEspacialResult);
     }
 
@@ -76,5 +83,6 @@ public class NaveEspacialServiceImpl implements NaveEspacialService {
     public void deleteNaveEspacial(Long id) {
         getNaveEspacialById(id);
         naveEspacialRepository.deleteById(id);
+        log.info("Eliminando nave espacial con id " + id);
     }
 }
