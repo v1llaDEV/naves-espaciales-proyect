@@ -30,7 +30,8 @@ probar la parte de kafka se debe establecer a true.
 
 Requisitos:
 
-- Tener levantado un cluster de kafka expuesto en el puerto 9092
+- Tener levantado un cluster de kafka expuesto en el puerto 9092. Se acompaña un docker-compose en la
+raíz del proyecto para poder levantar este cluster.
 
 ## Enunciado
 
